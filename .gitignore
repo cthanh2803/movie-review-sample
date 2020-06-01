@@ -12,6 +12,7 @@
 /tmp/*
 !/log/.keep
 !/tmp/.keep
+/public/system/movies/images
 
 # Ignore pidfiles, but keep the directory.
 /tmp/pids/*
