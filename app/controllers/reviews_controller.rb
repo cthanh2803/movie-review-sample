@@ -2,6 +2,8 @@
 
 class ReviewsController < ApplicationController
   before_action :set_review, only: %i[show edit update destroy]
+  before_action :set_movie
+  before_action :authenticate_user!
   # GET /reviews
   # GET /reviews.json
   def index
@@ -25,14 +27,11 @@ class ReviewsController < ApplicationController
   def create
     @review = Review.new(review_params)
     @review.user_id = current_user.id
-    respond_to do |format|
-      if @review.save
-        format.html { redirect_to @review, notice: 'Review was successfully created.' }
-        format.json { render :show, status: :created, location: @review }
-      else
-        format.html { render :new }
-        format.json { render json: @review.errors, status: :unprocessable_entity }
-      end
+    @review.movie_id = @movie.id
+    if @review.save
+      redirect_to @movie
+    else
+      render 'new'
     end
   end
 
@@ -65,6 +64,10 @@ class ReviewsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_review
     @review = Review.find(params[:id])
+  end
+
+  def set_movie
+    @movie = Movie.find(params[:movie_id])
   end
 
   # Only allow a list of trusted parameters through.
